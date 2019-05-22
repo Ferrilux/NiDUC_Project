@@ -27,8 +27,9 @@ temp_size = 2*len(A) - 1
 pn_seq_gen = []
 
 for i in range(temp_size):
-    pn_seq_gen.append(A[-1])
-    A = [A[-1]^A[-2], A[0], A[1], A[2], A[3], A[4], A[5]]
+    pn_seq_gen.append(temp[-1])
+    temp = [temp[-1]^temp[-2], temp[0], temp[1], temp[2], temp[3],
+            temp[4], temp[5]]
 
 for i in range(0, temp_size):
     pn_seq_gen[i] = 2*pn_seq_gen[i] - 1
