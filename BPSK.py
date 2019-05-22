@@ -1,41 +1,69 @@
 import cv2
-import numpy as nm
+import numpy as np
 import scipy
 import matplotlib.pylab as plt
 
 image = cv2.imread('example.jpg',0) #wczytanie pliku jpg
 
 _, bw_img = cv2.threshold(image,127,255,cv2.THRESH_BINARY) #konwersja na tablice binara
-cv2.imshow("Binary Image",bw_img) #testowe wyswietlenie przekonwertowanego obrazu
+#cv2.imshow("Binary Image",bw_img) #testowe wyswietlenie przekonwertowanego obrazu
 
-data = bw_img #zapis danych do nowej zmiennej
+data_bin = bw_img #zapis danych do nowej zmiennej
+data_len = len(data_bin)
+print("Długość przesyłanego ciągu bitów: ")
+print(data_len)
 
-# print(len(data)) #wyswietlenie dlugosci tablicy (kontrolnie, mozna wywalic)
+#non return zero encoder
+non_ret_zero = np.zeros(data_len)
 
-data_len = len(data)
-data_arr = nm.array(data)
-bipolar = 2*data_arr-1
-bit_dur = 1
-amplitude_scaling = bit_dur/2
-freq = 3/bit_dur
-samples = 1000
-time = nm.linspace(0,5,samples)
+for i in range(0,data_len):
+    non_ret_zero[i] = 2*data_bin[i] - 1
 
-samples_per_bit = samples/data_arr.size
+#PN sequence Generator
+temp = np.array([randint(0,2),randint(0,2),randint(0,2),randint(0,2),
+                 randint(0,2),randint(0,2),randint(0,2)])
+temp_size = 2*len(A) - 1
 
-dd = nm.repeat(data_arr, samples_per_bit)
-bb = nm.repeat(bipolar, samples_per_bit)
+pn_seq_gen = []
 
-dw = dd
-bw = bb
+for i in range(temp_size):
+    pn_seq_gen.append(A[-1])
+    A = [A[-1]^A[-2], A[0], A[1], A[2], A[3], A[4], A[5]]
 
-waveform = nm.sqrt(2*amplitude_scaling/bit_dur) * nm.cos(2*nm.pi*freq*time)
+for i in range(0, temp_size):
+    pn_seq_gen[i] = 2*pn_seq_gen[i] - 1
 
-f, ax = plt.subplots(4,1, sharex=True, sharey=True, squeeze=True)
-ax[0].plot(time, dw)
-ax[1].plot(time, bw)
-ax[2].plot(time, waveform)
-ax[3].plot(time, bpsk_w, '.')
-ax[0].axis([0, 5, -1.5, 1.5])
-ax[0].set_xlabel('time')
-plt.show()
+#PN sequence multiplier
+pn_seq_mult = []
+
+for i in range(0, data_len):
+    for j in range (1):
+        for k in range(0, temp_size):
+            pn_seq_mult.append(pn_seq_gen[k]*non_ret_zero[i])
+
+final_len = len(pn_seq_mult)
+
+#BPSK Modulator
+T = 1
+t = r_[0:T:0.1]
+f = 1
+carrier = sqrt(2*(T**-1))*sin(2*pi*f*t)
+carrier_len = len(carrier)
+plt.plot(carrier)
+show()
+
+bpsk = []
+for i in range(0,final_len):
+    if pn_seq_mult[i] >= 0:
+        bpsk.append(carrier)
+    else:
+        bpsk.append(-1*carrier)
+
+bpsk_signal = concatenate(bpsk)
+
+figure(1)
+plt.plot(bpsk_signal)
+xlabel('Time')
+ylabel('BPSK Signal')
+plt.show
+
