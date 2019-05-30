@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 import scipy
 import matplotlib.pylab as plt
-
+import random as rd
 image = cv2.imread('example.jpg', 0)  # wczytanie pliku jpg
 
 _, bw_img = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)  # konwersja na tablice binara
-# cv2.imshow("Binary Image",bw_img) #testowe wyswietlenie przekonwertowanego obrazu
+cv2.imshow("Binary Image",bw_img) #testowe wyswietlenie przekonwertowanego obrazu
 
 data_bin = np.empty([len(bw_img), len(bw_img[0])])
 # zamiana wszystkich 255 na 1
@@ -23,7 +23,7 @@ print("Długość przesyłanego ciągu bitów: ")
 print(data_len * len(data_bin[0]))
 
 # próba zwężenia do macierzy 2D
-data_bin = np.squeeze(np.asarray(data_bin))
+data_bin  = np.array(data_bin).flatten()
 
 # non return zero encoder
 non_ret_zero = np.zeros(data_len)
@@ -32,8 +32,8 @@ for i in range(0, data_len):
     non_ret_zero[i] = 2 * data_bin[i] - 1
 
 # PN sequence Generator
-temp = np.array([np.randint(0, 2), np.randint(0, 2), np.randint(0, 2), np.randint(0, 2),
-                 np.randint(0, 2), np.randint(0, 2), np.randint(0, 2)])
+temp = np.array([rd.randint(0, 2), rd.randint(0, 2),rd.randint(0,2),rd.randint(0,2),
+              rd.randint(0, 2),rd.randint(0, 2),rd.randint(0, 2)])
 temp_size = 2 * len(temp) - 1
 
 pn_seq_gen = []
@@ -58,7 +58,7 @@ final_len = len(pn_seq_mult)
 
 # BPSK Modulator
 T = 1
-t = r_[0:T:0.1]
+t = np.arange(0,1,0.1)
 f = 1
 carrier = np.sqrt(2 * (T ** -1)) * np.sin(2 * np.pi * f * t)
 carrier_len = len(carrier)
@@ -72,7 +72,7 @@ for i in range(0, final_len):
     else:
         bpsk.append(-1 * carrier)
 
-bpsk_signal = concatenate(bpsk)
+bpsk_signal = np.concatenate(bpsk)
 
 plt.figure(1)
 plt.plot(bpsk_signal)
