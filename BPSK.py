@@ -32,12 +32,9 @@ for i in range(0, data_len):
     non_ret_zero[i] = 2 * data_bin[i] - 1
 
 # PN sequence Generator
-temp = np.array()
-
-for i in range(data_len):
-    temp[i] = rd.randint(0,2)
-    
-temp_size = 2 ** len(temp) - 1
+temp = np.array([rd.randint(0, 2), rd.randint(0, 2),rd.randint(0,2),rd.randint(0,2),
+              rd.randint(0, 2),rd.randint(0, 2),rd.randint(0, 2)])
+temp_size = 2 * len(temp) - 1
 
 pn_seq_gen = []
 
